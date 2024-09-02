@@ -20,11 +20,11 @@ export class UsersService {
     return lastValueFrom(this.http.get<IUser>(`${this.baseUrl}/${id}`));
   }
 
-  create(user: IUser): Promise<IUser> {
+  insert(user: IUser): Promise<IUser> {
     return firstValueFrom(this.http.post<IUser>(this.baseUrl, user));
   }
 
-  update(id: number, user: IUser): Promise<IUser> {
+  update(id: string, user: IUser): Promise<IUser> {
     return firstValueFrom(this.http.put<IUser>(`${this.baseUrl}/${id}`, user));
   }
 
