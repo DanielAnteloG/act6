@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsersService } from '../../services/users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser } from '../../interfaces/iuser.interface';
@@ -21,15 +21,25 @@ userForm: FormGroup;
 
 
 
+
 constructor() {
   this.userForm = new FormGroup({
-    nombre: new FormControl(null, []),
-    apellidos: new FormControl(null, []),
-    email: new FormControl(null, []),
-    imagen: new FormControl(null, []),
+    nombre: new FormControl(null, [Validators.required,
+      Validators.minLength(3)]),
+    apellidos: new FormControl(null, [Validators.required,
+      Validators.minLength(3)]),
+    email: new FormControl(null, [Validators.required,
+      Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)]),
+    imagen: new FormControl(null, [Validators.required,
+      Validators.minLength(3)]),
   
   }, [])
 }
+
+checkControl(formControlName: string, validador: string) {
+  return this.userForm.get(formControlName)?.hasError(validador) && this.userForm.get(formControlName)?.touched;
+}
+
 
 ngOnInit() {
   this.activatedRoute.params.subscribe(async (params: any) => {
@@ -38,16 +48,18 @@ ngOnInit() {
       const user: IUser = await this.userService.getById(params.id)
       
 
-      //opcion 2 inicializando de nuevo los campos del formulario me permite por ejemplo poner otros validadores
+     
       this.userForm = new FormGroup({
         _id: new FormControl(user._id, []),
-        nombre: new FormControl(user.first_name, []),
-        apellidos: new FormControl(user.last_name, []),
-        email: new FormControl(user.email, []),
-        imagen: new FormControl(user.image, []),
-      }, [])
-
-
+        nombre: new FormControl(user.first_name, [Validators.required,
+          Validators.minLength(3)]),
+        apellidos: new FormControl(user.last_name, [Validators.required,
+          Validators.minLength(3)]),
+        email: new FormControl(user.email, [Validators.required,
+          Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)]),
+        imagen: new FormControl(user.image, [Validators.required,
+          Validators.minLength(3)]),
+      }, []);
     }
   })
 }
@@ -75,7 +87,8 @@ async getDataForm() {
     
     try {
       const response: IUser = await this.userService.insert(this.userForm.value)
-      if (response._id) {
+      if (response && response.id) {
+        alert('Usuario insertado')
         this.router.navigate(['/dashboard'])
       }
     } catch ({ error }: any) {
