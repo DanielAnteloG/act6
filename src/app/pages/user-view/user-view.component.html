@@ -1,0 +1,27 @@
+<section class="container px-3 mt-5 d-flex justify-content-center">
+    <figure class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100 bg-body-secondary shadow p-4">
+        <div class="p-3 border-end border-dark w-100 w-md-auto mb-3 mb-md-0 text-center text-md-start">
+            <img class="img-fluid rounded-circle" [src]="user?.image" alt="User Image">
+        </div>
+        <div class="m-0 m-md-5 w-100">
+            <div class="mb-4 text-center text-md-start">
+                <h1>{{user?.first_name}}</h1>
+                <h2>{{user?.last_name}}</h2>
+            </div>
+            <div class="pb-3 text-center text-md-start">
+                <strong class="me-1">Usuario:</strong>
+                <span>{{user?.username}}</span>
+            </div>
+            <div class="mb-3 text-center text-md-start">
+                <strong class="me-1">Email:</strong>
+                <span>{{user?.email}}</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start mt-4">
+                <button (click)="deleteUser(user?._id)" class="btn btn-danger">Eliminar</button>
+                <a [routerLink]="['/dashboard/actualizar-usuario', user?._id]" class="btn btn-warning">Actualizar</a>
+                <button (click)="router.navigate(['/dashboard'])" class="btn btn-secondary">Volver al Listado</button>
+            </div>
+        </div>
+    </figure>
+</section>
+
